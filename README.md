@@ -17,3 +17,8 @@ Open "storage-schemas.conf" and remote section [default_1min_for_1day]. Instead,
 pattern = .*<br />
 retentions = 60s:5y<br />
 Note that "kwh" is just a label and has no specific meaning. The "kwh" section is configured to store data every 60 sec for 5 years.
+
+#### Configure Graphite database
+cd /opt/graphite/webapp/graphite/<br />
+'sudo python manage.py syncdb'<br />
+
