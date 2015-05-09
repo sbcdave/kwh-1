@@ -5,9 +5,9 @@ Datalogger tool box to retrieve microgrid data from remote sites as part of Kilo
 Install Dependencies<br />
 run as root "graphite-install.sh"<br />
 
-Configure carbon.conf
+Configure carbon.conf<br />
 cd /opt/graphite/conf<br />
 sudo cp carbon.conf.example carbon.conf //keep default settings<br />
 <br />
-Configure storage-schemas.conf
+Configure storage-schemas.conf<br />
 sudo cp storage-schemas.conf.example storage-schemas.conf<br />
