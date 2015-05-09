@@ -20,5 +20,5 @@ Note that "kwh" is just a label and has no specific meaning. The "kwh" section i
 
 #### Configure Graphite database
 cd /opt/graphite/webapp/graphite/<br />
-'sudo python manage.py syncdb'<br />
+`sudo python manage.py syncdb`<br />
 
