@@ -43,4 +43,9 @@ edit the Apache configuration file we copied earlier:
 
 Modify ports.conf and update the IP address to listen
 
-
+#### Install Grafana
+$ wget https://grafanarel.s3.amazonaws.com/builds/grafana_2.0.2_amd64.deb
+$ sudo apt-get install -y adduser libfontconfig
+$ sudo dpkg -i grafana_2.0.2_amd64.deb
+$ sudo apt-get update
+$ sudo apt-get install grafana
