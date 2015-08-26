@@ -1,0 +1,218 @@
+import java.text.SimpleDateFormat
+
+buildscript {
+    repositories {
+        jcenter()
+    }
+
+    dependencies {
+        classpath 'com.netflix.nebula:gradle-ospackage-plugin:1.10.0'
+        classpath 'org.hidetake:gradle-ssh-plugin:0.3.10'
+    }
+}
+
+apply plugin: 'java'
+apply plugin: 'eclipse'
+apply plugin: 'groovy'
+apply plugin: 'application'
+apply plugin: 'os-package'
+apply plugin: 'ssh'
+
+
+compileJava {
+    sourceCompatibility = 1.8
+    targetCompatibility = 1.8
+}
+
+compileTestJava {
+    sourceCompatibility = 1.8
+    targetCompatibility = 1.8
+    options.compilerArgs += "-parameters"
+}
+
+repositories {
+    mavenCentral()
+}
+
+def gitSha() {
+    return 'git rev-parse --short HEAD'.execute().text.trim()
+}
+
+def buildTime() {
+    def df = new SimpleDateFormat("yyyyMMddHHmm")
+    df.setTimeZone(TimeZone.getTimeZone("UTC"))
+    return df.format(new Date())
+}
+
+ext {
+    versionMajor = 1
+    versionMinor = 0
+    versionPatch = 1
+    versionBuild = buildTime() // if you want build timestamp qualifiers
+    //versionBuild = gitSha() // or you can use the gitSha() if traceability to a commit is more important
+    project.version = "${versionMajor}.${versionMinor}.${versionPatch}.v${versionBuild}"
+
+	delete fileTree(dir: "build/libs")
+	
+    distSpec = copySpec {
+        into("conf") {
+            from "src/main/conf"
+            from "src/main/resource"
+        }
+        into("bin") {
+            from "src/main/bin"
+        }
+        into("lib") {
+            from "src/main/lib"
+            from "build/libs"
+        }
+        into("logs") {
+            from "src/main/logs"
+        }
+    }
+}
+
+
+mainClassName = "org.mbmg.tcp.server.Server"
+
+jar {
+    from {
+         configurations.compile.collect { it.isDirectory() ? it : zipTree(it) }
+    } 
+    manifest {
+        attributes("Main-Class":"org.mbmg.tcp.server.Server")
+    }
+}
+
+dependencies {
+    compile 'io.netty:netty-all:4.0.19.Final'
+    compile 'ch.qos.logback:logback-classic:1.1.2'
+    compile 'ch.qos.logback:logback-core:1.1.2'
+    compile 'javassist:javassist:3.12.1.GA'
+    compile 'org.slf4j:slf4j-api:1.7.6'
+    compile 'ch.qos.logback:logback-classic:1.1.2'
+    compile 'ch.qos.logback:logback-core:1.1.2'
+
+    /**
+     * Mandatory dependencies for using Spock test framework
+     */
+    testCompile 'org.codehaus.groovy:groovy-all:2.2.2'
+    testCompile 'org.spockframework:spock-core:0.7-groovy-2.0'
+    /**
+     * Optional dependencies for using Spock
+     */
+    testCompile 'org.hamcrest:hamcrest-core:1.2'
+    testRuntime 'cglib:cglib-nodep:2.2'
+
+}
+
+task wrapper(type: Wrapper) {
+    gradleVersion = '2.0'
+}
+
+
+task distBin(type: Zip, dependsOn: [jar, assemble]) {
+    appendix = 'binary'
+    into("kwh-tcp-server") {
+        with distSpec
+    }
+}
+
+ospackage {
+    packageName = 'kwh-tcp-server'
+    version = "${versionMajor}.${versionMinor}.${versionPatch}"
+    release = 1
+    arch = I386
+    os = LINUX
+
+    preInstall file('scripts/rpm/preInstall.sh')
+    postInstall file('scripts/rpm/postInstall.sh')
+    preUninstall 'touch /tmp/myfile'
+    postUninstall file('scripts/rpm/postUninstall.sh')
+
+    requires('java')
+
+    into '/opt/kwh-tcp-server'
+
+    from(jar.outputs.files) {
+        into 'lib'
+    }
+    from('src/main/lib') {
+        into 'lib'
+    }
+    from('scripts') {
+        into 'bin'
+        exclude 'database'
+        fileMode = 0550
+    }
+    from('src/main/resources') {
+        fileType CONFIG | NOREPLACE
+        into 'conf'
+    }
+    from('home') {
+        // Creating directory entries (or not) in the RPM is normally left up to redline-rpm library.
+        // Use this to explicitly create an entry -- for setting directory fileMode on system directories.
+        createDirectoryEntry = true
+        fileMode = 0500
+        into 'home'
+    }
+
+    from('endorsed') {
+        // Will tell redline-rpm not to auto create directories, which
+        // is sometimes necessary to avoid rpm directory conflicts
+        addParentDirs = false
+        into '/usr/share/tomcat/endorsed'
+    }
+
+}
+
+buildRpm {
+    requires('bar', '2.2', GREATER | EQUAL)
+    requires('baz', '1.0.1', LESS)
+    link('/opt/foo/bin/foo.init', '/etc/init.d/foo')
+}
+
+// Global settings
+ssh {
+    identity = file("${System.getProperty('user.home')}/.ssh/khw.pem")     // Enable public key authentication
+    //knownHosts = allowAnyHosts    // Disable host key verification
+}
+
+// Add a remote host
+remotes {
+    tcpServer {
+        host = '173.236.249.69'
+        user = 'dhc-user'
+        // password = 'dalo$192'
+    }
+}
+
+task deploy(type: SshTask, dependsOn: [clean, distBin]) {
+    description = 'Deploys the TCP Server'
+    ssh {
+        // Enable PTY allocation for sudo
+        pty = true
+    }
+    session(remotes.tcpServer) {
+        put 'build/distributions/*.zip', '/home/dhc-user/kwh/kwh-tcp-server-repo'
+		//execute '~/kwh/kwh-tcp-server-repo/deploy-latest-tcp-filibaba'
+        // execute '~/muhuru-bay-dashboard/muhuru-bay-tcp-server/muhuru-bay-tcp-server/bin/muhuru-bay-tcp-server stop ||' +
+        //         ' true'
+        // execute 'mv ~/muhuru-bay-dashboard/muhuru-bay-tcp-server/muhuru-bay-tcp-server ' +
+        //        '~/muhuru-bay-dashboard/muhuru-bay-tcp-server/old/muhuru-bay-tcp-server_' + buildTime() + ' || true'
+        // execute 'cd ~/muhuru-bay-dashboard/muhuru-bay-tcp-server && unzip *.zip'
+        // execute 'dos2unix ~/muhuru-bay-dashboard/muhuru-bay-tcp-server/muhuru-bay-tcp-server/bin/muhuru-bay-tcp-server'
+        // execute 'chmod +x ~/muhuru-bay-dashboard/muhuru-bay-tcp-server/muhuru-bay-tcp-server/bin/muhuru-bay-tcp-server'
+        // execute 'dos2unix ~/muhuru-bay-dashboard/muhuru-bay-tcp-server/muhuru-bay-tcp-server/conf/*'
+        // execute 'rm ~/muhuru-bay-dashboard/muhuru-bay-tcp-server/*.zip || true'
+        // execute '~/muhuru-bay-dashboard/muhuru-bay-tcp-server/muhuru-bay-tcp-server/bin/muhuru-bay-tcp-server start ' +
+        //        '|| true'
+    }
+}
+
+task printProps << {
+    println dataloggerUser
+    println dataloggerPassword
+}
+
+
