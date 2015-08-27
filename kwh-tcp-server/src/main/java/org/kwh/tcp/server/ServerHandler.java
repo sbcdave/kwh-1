@@ -21,12 +21,16 @@ import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelInboundHandlerAdapter;
 
 import java.util.List;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 import org.kwh.tcp.util.Parser;
 import org.kwh.tcp.util.Record;
 
 public class ServerHandler extends ChannelInboundHandlerAdapter {
 
+	private static ExecutorService es = Executors.newCachedThreadPool();
+	
 	public ServerHandler() {
 	}
 
@@ -37,10 +41,15 @@ public class ServerHandler extends ChannelInboundHandlerAdapter {
 			System.out.println("channelRead");
 			String receivedContent = in
 					.toString(io.netty.util.CharsetUtil.US_ASCII);
-			new Consumer(receivedContent).start();
 			// send back message to the datalogger to notify it the bytes were
 			// correctly received
-			ctx.writeAndFlush("@888");
+			byte[] response = "@888\n".getBytes();
+			final ByteBuf buffer = ctx.alloc().buffer(response.length);
+			buffer.writeBytes(response);
+			ctx.writeAndFlush(buffer);
+			Consumer cons = new Consumer(receivedContent);
+			es.submit(cons);
+			
 		} catch (Exception e) {
 			e.printStackTrace();
 		} finally {
