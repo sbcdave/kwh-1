@@ -69,30 +69,37 @@ wrapper.java.additional.auto_bits=TRUE
 wrapper.java.additional.1=-Dorg.kwh.tcp.server.port=6001
 wrapper.java.additional.2=-Dorg.kwh.graphite.server.port=2003
 wrapper.java.additional.3=-Dorg.kwh.graphite.server.host=127.0.0.1
-wrapper.java.additional.4=-Dlogback.configurationFile=../conf/logback.xml
-wrapper.java.addidional.5=-Dorg.kwh.send.carbon=false
-wrapper.java.addidional.6=-Dorg.kwh.AD01.channel.label="Current1"
-wrapper.java.addidional.7=-Dorg.kwh.AD02.channel.label="Current2"
-wrapper.java.addidional.8=-Dorg.kwh.AD03.channel.label="not used"
-wrapper.java.addidional.9=-Dorg.kwh.AD04.channel.label="not used"
-wrapper.java.addidional.10=-Dorg.kwh.AD05.channel.label="not used"
-wrapper.java.addidional.11=-Dorg.kwh.AD06.channel.label="not used"
-wrapper.java.addidional.12=-Dorg.kwh.AD11.channel.label="Temperature_1"
-wrapper.java.addidional.13=-Dorg.kwh.AD12.channel.label="Temperature_1"
-wrapper.java.addidional.14=-Dorg.kwh.PU01.channel.label="not used"
-wrapper.java.addidional.15=-Dorg.kwh.PU02.channel.label="not used"
-wrapper.java.addidional.16=-Dorg.kwh.PU03.channel.label="not used"
-wrapper.java.addidional.17=-Dorg.kwh.AD01.channel.active=true
-wrapper.java.addidional.18=-Dorg.kwh.AD02.channel.active=true
-wrapper.java.addidional.19=-Dorg.kwh.AD03.channel.active=false
-wrapper.java.addidional.20=-Dorg.kwh.AD04.channel.active=false
-wrapper.java.addidional.21=-Dorg.kwh.AD05.channel.active=false
-wrapper.java.addidional.22=-Dorg.kwh.AD06.channel.active=false
-wrapper.java.addidional.23=-Dorg.kwh.AD11.channel.active=true
-wrapper.java.addidional.24=-Dorg.kwh.AD12.channel.active=false
-wrapper.java.addidional.25=-Dorg.kwh.PU01.channel.active=false
-wrapper.java.addidional.26=-Dorg.kwh.PU02.channel.active=false
-wrapper.java.addidional.27=-Dorg.kwh.PU03.channel.active=false
+wrapper.java.additional.4=-Dorg.kwh.send.carbon=true
+wrapper.java.additional.5=-Dlogback.configurationFile=../conf/logback.xml
+wrapper.java.additional.6=-Dorg.kwh.AD01.channel.label=Solar_DC
+wrapper.java.additional.7=-Dorg.kwh.AD02.channel.label=Inverter_DC
+wrapper.java.additional.8=-Dorg.kwh.AD03.channel.label=Battery_Voltage
+wrapper.java.additional.9=-Dorg.kwh.AD04.channel.label=not_used
+wrapper.java.additional.10=-Dorg.kwh.AD05.channel.label=not_used
+wrapper.java.additional.11=-Dorg.kwh.AD06.channel.label=not_used
+wrapper.java.additional.12=-Dorg.kwh.AD11.channel.label=Temperature_Inside_Kiosk
+wrapper.java.additional.13=-Dorg.kwh.AD12.channel.label=not_used
+wrapper.java.additional.14=-Dorg.kwh.PU01.channel.label=Energy_Kiosk
+wrapper.java.additional.15=-Dorg.kwh.PU02.channel.label=Energy_Church_1
+wrapper.java.additional.16=-Dorg.kwh.PU03.channel.label=Energy_Church_2
+wrapper.java.additional.17=-Dorg.kwh.PU04.channel.label=Energy_Community_Center
+wrapper.java.additional.18=-Dorg.kwh.PU05.channel.label=not_used
+wrapper.java.additional.19=-Dorg.kwh.PU06.channel.label=not_used
+wrapper.java.additional.20=-Dorg.kwh.AD01.channel.active=true
+wrapper.java.additional.21=-Dorg.kwh.AD02.channel.active=true
+wrapper.java.additional.22=-Dorg.kwh.AD03.channel.active=true
+wrapper.java.additional.23=-Dorg.kwh.AD04.channel.active=false
+wrapper.java.additional.24=-Dorg.kwh.AD05.channel.active=false
+wrapper.java.additional.25=-Dorg.kwh.AD06.channel.active=false
+wrapper.java.additional.26=-Dorg.kwh.AD11.channel.active=true
+wrapper.java.additional.27=-Dorg.kwh.AD12.channel.active=false
+wrapper.java.additional.28=-Dorg.kwh.PU01.channel.active=true
+wrapper.java.additional.29=-Dorg.kwh.PU02.channel.active=true
+wrapper.java.additional.30=-Dorg.kwh.PU03.channel.active=true
+wrapper.java.additional.31=-Dorg.kwh.PU04.channel.active=false
+wrapper.java.additional.32=-Dorg.kwh.PU05.channel.active=false
+wrapper.java.additional.33=-Dorg.kwh.PU06.channel.active=false
+wrapper.java.additional.34=-Dorg.kwh.localTimezone=Africa/Lusaka
 
 # Initial Java Heap Size (in MB)
 #wrapper.java.initmemory=3

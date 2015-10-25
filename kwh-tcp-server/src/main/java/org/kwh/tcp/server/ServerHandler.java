@@ -76,7 +76,8 @@ public class ServerHandler extends ChannelInboundHandlerAdapter {
 		@Override
 		public void run() {
 			boolean sendToCarbon = Boolean.parseBoolean(System.getProperty(
-					"org.kwh.send.carbon", "true"));
+					"org.kwh.send.carbon", "false"));
+			System.out.println("sendToCarbon = " + sendToCarbon);
 			try {
 				if (!receivedContent.startsWith("@")) {
 					// Parse packet

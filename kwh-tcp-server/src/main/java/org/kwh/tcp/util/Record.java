@@ -18,10 +18,13 @@ public class Record {
 
     // stationId_channel value timestamp
     private static String GRAPHITE_FORMAT = "%s.%s.%s %f %s\n";
+    private static String localTimezone =System.getProperty("org.kwh.localTimezone","UTC");
+    private static ZoneId localZoneID = ZoneId.of(localTimezone);
     private static ZoneId UTC = ZoneId.of("UTC");
     private static Map<String,String> channelCodeToName = new HashMap<>();
     private static List<String> activeChannels = new ArrayList<>();
     private static DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MM-dd-yyyy HH:mm:ss");
+    private static String stationIDovrd =System.getProperty("org.kwh.stationID");
     private static String AD01channelLabel =System.getProperty("org.kwh.AD01.channel.label","Channel_AD01");
     private static String AD02channelLabel =System.getProperty("org.kwh.AD02.channel.label","Channel_AD02");
     private static String AD03channelLabel =System.getProperty("org.kwh.AD03.channel.label","Channel_AD03");
@@ -33,6 +36,9 @@ public class Record {
     private static String PU01channelLabel =System.getProperty("org.kwh.PU01.channel.label","Channel_PU01");
     private static String PU02channelLabel =System.getProperty("org.kwh.PU02.channel.label","Channel_PU02");
     private static String PU03channelLabel =System.getProperty("org.kwh.PU03.channel.label","Channel_PU03");
+    private static String PU04channelLabel =System.getProperty("org.kwh.PU04.channel.label","Channel_PU04");
+    private static String PU05channelLabel =System.getProperty("org.kwh.PU05.channel.label","Channel_PU05");
+    private static String PU06channelLabel =System.getProperty("org.kwh.PU06.channel.label","Channel_PU06");
     private static Boolean AD01channelActive =Boolean.parseBoolean(System.getProperty("org.kwh.AD01.channel.active","true"));
     private static Boolean AD02channelActive =Boolean.parseBoolean(System.getProperty("org.kwh.AD02.channel.active","true"));
     private static Boolean AD03channelActive =Boolean.parseBoolean(System.getProperty("org.kwh.AD03.channel.active","true"));
@@ -44,6 +50,9 @@ public class Record {
     private static Boolean PU01channelActive =Boolean.parseBoolean(System.getProperty("org.kwh.PU01.channel.active","true"));
     private static Boolean PU02channelActive =Boolean.parseBoolean(System.getProperty("org.kwh.PU02.channel.active","true"));
     private static Boolean PU03channelActive =Boolean.parseBoolean(System.getProperty("org.kwh.PU03.channel.active","true"));
+    private static Boolean PU04channelActive =Boolean.parseBoolean(System.getProperty("org.kwh.PU04.channel.active","true"));
+    private static Boolean PU05channelActive =Boolean.parseBoolean(System.getProperty("org.kwh.PU05.channel.active","true"));
+    private static Boolean PU06channelActive =Boolean.parseBoolean(System.getProperty("org.kwh.PU06.channel.active","true"));
 
     
     
@@ -59,6 +68,9 @@ public class Record {
         channelCodeToName.put("PU01", PU01channelLabel);
         channelCodeToName.put("PU02", PU02channelLabel);
         channelCodeToName.put("PU03", PU03channelLabel);
+        channelCodeToName.put("PU04", PU04channelLabel);
+        channelCodeToName.put("PU05", PU05channelLabel);
+        channelCodeToName.put("PU06", PU06channelLabel);
         channelCodeToName.put("TM", "TimeStamp");
         
     }
@@ -75,6 +87,9 @@ public class Record {
     	if (PU01channelActive) activeChannels.add("PU01");
     	if (PU02channelActive) activeChannels.add("PU02");
     	if (PU03channelActive) activeChannels.add("PU03");
+    	if (PU04channelActive) activeChannels.add("PU04");
+    	if (PU05channelActive) activeChannels.add("PU05");
+    	if (PU06channelActive) activeChannels.add("PU06");
     }
     
     static Logger Logger = LoggerFactory.getLogger("MyRecord");
@@ -113,7 +128,15 @@ public class Record {
     }
 
     public String getStationID() {
-        return stationID;
+    	// possibility to override the station ID if necessary
+    	if (stationIDovrd != null)
+    	{
+    		return stationIDovrd;
+    	}
+    	else
+    	{
+    		return stationID;
+    	}
     }
 
     public LocalDateTime getTimestamp() {
@@ -131,15 +154,6 @@ public class Record {
     public List<String> toGraphite() {
         // path value timestamp \n
         long epochTime = getEpochTime();
-        
-        // clock time of the server in Nairobi time zone, converted to epochtime.
-        // UI used, only accepts UTC timezone. Also the timestamp received from Kenya
-        // is set to UTC. As such it will correctly read as time from Kenya. In other words,
-        // we don't want to apply any transformation since the timezone of the UI will always be
-        // UTC.
-        //LocalDateTime currentTime = LocalDateTime.now(ZoneId.of("Africa/Nairobi"));
-        //Long currentTimeEpoch = currentTime.atZone(UTC).toEpochSecond();
-        //String currentTimeFormatTimestamp = currentTime.format(formatter);
   
         List<String> data = new ArrayList();
         
@@ -159,11 +173,9 @@ public class Record {
         return data;
     }
 
-    // UI used, only accepts UTC timezone. Also the timestamp received from Kenya
-    // is set to UTC. As such it will correctly read as time from Kenya. In other words,
-    // we don't want to apply any transformation since the timezone of the UI will always be
-    // UTC.
     private long getEpochTime() {
-        return this.getTimestamp().atZone(UTC).toEpochSecond();
+    	System.out.println("Local EpochTime (" + localZoneID + "): " + this.getTimestamp().atZone(localZoneID).toEpochSecond());
+    	System.out.println("UTC EpochTime: " + this.getTimestamp().atZone(UTC).toEpochSecond());
+        return this.getTimestamp().atZone(localZoneID).toEpochSecond();
     }
 }
