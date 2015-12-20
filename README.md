@@ -49,3 +49,11 @@ $ sudo apt-get install -y adduser libfontconfig
 $ sudo dpkg -i grafana_2.0.2_amd64.deb
 $ sudo apt-get update
 $ sudo apt-get install grafana
+
+#### Upgrade Grafana
+Add the following line to your /etc/apt/sources.list file.<br />
+`deb https://packagecloud.io/grafana/stable/debian/ wheezy main`<br />
+Then to upgrade Grafana whenever a new version has been released, follow the following steps:<br />
+`curl https://packagecloud.io/gpg.key | sudo apt-key add -`<br />
+`sudo apt-get update`<br />
+`sudo apt-get install grafana`<br />
