@@ -48,7 +48,9 @@ $ wget https://grafanarel.s3.amazonaws.com/builds/grafana_2.0.2_amd64.deb
 $ sudo apt-get install -y adduser libfontconfig
 $ sudo dpkg -i grafana_2.0.2_amd64.deb
 $ sudo apt-get update
-$ sudo apt-get install grafana
+$ sudo apt-get install grafana <br />
+To use port 80 you will have to give Grafana binary permission as follow:
+sudo setcap 'cap_net_bind_service=+ep' /usr/sbin/grafana-server
 
 #### Upgrade Grafana
 Add the following line to your /etc/apt/sources.list file.<br />
