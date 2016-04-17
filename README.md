@@ -12,7 +12,7 @@ run as root "graphite-install.sh"<br />
 #### Configure storage-schemas.conf<br />
 `cd /opt/graphite/conf`<br />
 `sudo cp storage-schemas.conf.example storage-schemas.conf`<br />
-Open "storage-schemas.conf" and remove section [default_1min_for_1day]. Instead, insert the following section:
+Open "storage-schemas.conf" and remove section [default_1min_for_1day]. Instead, insert the following section:<br />
 [kwh]<br />
 pattern = .*<br />
 retentions = 60s:5y<br />
