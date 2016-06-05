@@ -29,16 +29,18 @@ import org.kwh.tcp.util.Record;
 
 public class ServerHandler extends ChannelInboundHandlerAdapter {
 
-	private static ExecutorService es = Executors.newCachedThreadPool();
-	
+	// private static ExecutorService es = Executors.newCachedThreadPool();
+	private static ExecutorService es = Executors.newFixedThreadPool(4);
+
 	public ServerHandler() {
+
 	}
 
 	@Override
 	public void channelRead(ChannelHandlerContext ctx, Object msg) {
 		ByteBuf in = (ByteBuf) msg;
 		try {
-			System.out.println("channelRead");
+			System.out.println("INFO - New packet received");
 			String receivedContent = in
 					.toString(io.netty.util.CharsetUtil.US_ASCII);
 			// send back message to the datalogger to notify it the bytes were
@@ -49,7 +51,7 @@ public class ServerHandler extends ChannelInboundHandlerAdapter {
 			ctx.writeAndFlush(buffer);
 			Consumer cons = new Consumer(receivedContent);
 			es.submit(cons);
-			
+
 		} catch (Exception e) {
 			e.printStackTrace();
 		} finally {
@@ -70,30 +72,26 @@ public class ServerHandler extends ChannelInboundHandlerAdapter {
 		private final String receivedContent;
 
 		public Consumer(String receivedContent) {
+			System.out.println("INFO - A new consumer is created to handle a new packet");
 			this.receivedContent = receivedContent;
 		}
 
 		@Override
 		public void run() {
-			boolean sendToCarbon = Boolean.parseBoolean(System.getProperty(
-					"org.kwh.send.carbon", "false"));
-			System.out.println("sendToCarbon = " + sendToCarbon);
 			try {
 				if (!receivedContent.startsWith("@")) {
 					// Parse packet
+					System.out.println("INFO - A new packet is being parsed...");
 					Record newRecord = Parser.toRecord(receivedContent);
-
-					// Send data to Carbon if property activated
-					if (sendToCarbon) {
-						List<String> channelData = newRecord.toGraphite();
-						for (String chanelSample : channelData) {
-							GraphiteClient.getClient().sendData(chanelSample);
-						}
-					} else {
-						System.out
-								.println("Warning: \"org.kwh.send.carbon\" is set false. "
-										+ "Data won't be sent to the databaseÏ");
+					System.out.println("INFO - A new packet has been parsed and split in several datapoints.");
+					
+					List<String> channelData = newRecord.toGraphite();
+					for (String chanelSample : channelData) {
+						System.out.println("INFO - A new datapoint is being sent to Carbon...");
+						GraphiteClient.getClient().sendData(chanelSample);
 					}
+					System.out.println("INFO - All the datapoints have been sent to Carbon...");
+
 				}
 			} catch (Exception e) {
 				e.printStackTrace();

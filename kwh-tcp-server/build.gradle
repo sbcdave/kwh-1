@@ -45,9 +45,9 @@ def buildTime() {
 }
 
 ext {
-    versionMajor = 1
+    versionMajor = 2
     versionMinor = 0
-    versionPatch = 1
+    versionPatch = 0
     versionBuild = buildTime() // if you want build timestamp qualifiers
     //versionBuild = gitSha() // or you can use the gitSha() if traceability to a commit is more important
     project.version = "${versionMajor}.${versionMinor}.${versionPatch}.v${versionBuild}"
@@ -73,14 +73,14 @@ ext {
 }
 
 
-mainClassName = "org.mbmg.tcp.server.Server"
+mainClassName = "org.kwh.tcp.server.Server"
 
 jar {
     from {
          configurations.compile.collect { it.isDirectory() ? it : zipTree(it) }
     } 
     manifest {
-        attributes("Main-Class":"org.mbmg.tcp.server.Server")
+        attributes("Main-Class":"org.kwh.tcp.server.Server")
     }
 }
 

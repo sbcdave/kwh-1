@@ -161,7 +161,7 @@ public class Record {
         for (Map.Entry<String,Double> entry : this.channelData.entrySet()) {
         	if (activeChannels.contains(entry.getKey())) {
                 data.add(String.format(GRAPHITE_FORMAT,
-                        getStationID(), // TODO Create property to override StationID
+                        getStationID(),
                         entry.getKey(),
                         channelCodeToName.getOrDefault(entry.getKey(), entry.getKey()),
                         entry.getValue(),

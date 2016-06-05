@@ -52,20 +52,21 @@ class GraphiteClient {
             this.started = true;
             f.channel().closeFuture().sync();        
         } catch (Exception ex) {
-        	System.out.println("Exception Start up");
             ex.printStackTrace();
             group.shutdownGracefully();
         } 	        	
     }
 
     public void sendData(String data) {
-        // Connect lazily to make start work even if graphite isn't up
-        if(this.started == false) {
-            startUp();
-        }
-        if (this.started == true) {
-            this.connection.writeAndFlush(data);
-        }
+    	if (this.started) {
+    		System.out.println("INFO - Sending Packet to Carbon");
+    		this.connection.writeAndFlush(data);
+    	} else {
+    		System.out.println("WARNING - Connection to Graphite Server has failed or has not been started");
+    		System.out.println("WARNING - Shutting down gracefully");
+    		shutdown();
+    	}
+        
     }
 
     public void shutdown() {
