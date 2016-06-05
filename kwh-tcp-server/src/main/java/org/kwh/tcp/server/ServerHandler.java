@@ -26,11 +26,14 @@ import java.util.concurrent.Executors;
 
 import org.kwh.tcp.util.Parser;
 import org.kwh.tcp.util.Record;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class ServerHandler extends ChannelInboundHandlerAdapter {
 
 	// private static ExecutorService es = Executors.newCachedThreadPool();
 	private static ExecutorService es = Executors.newFixedThreadPool(4);
+	static Logger logger = LoggerFactory.getLogger(ServerHandler.class);
 
 	public ServerHandler() {
 
@@ -40,7 +43,7 @@ public class ServerHandler extends ChannelInboundHandlerAdapter {
 	public void channelRead(ChannelHandlerContext ctx, Object msg) {
 		ByteBuf in = (ByteBuf) msg;
 		try {
-			System.out.println("INFO - New packet received");
+			logger.info("New packet received");
 			String receivedContent = in
 					.toString(io.netty.util.CharsetUtil.US_ASCII);
 			// send back message to the datalogger to notify it the bytes were
@@ -62,7 +65,7 @@ public class ServerHandler extends ChannelInboundHandlerAdapter {
 	@Override
 	public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) {
 		// Close the connection when an exception is raised.
-		System.out.println("Exception caught in ServerHandler");
+		logger.error("Exception caught in ServerHandler");
 		cause.printStackTrace();
 		ctx.close();
 	}
@@ -72,7 +75,7 @@ public class ServerHandler extends ChannelInboundHandlerAdapter {
 		private final String receivedContent;
 
 		public Consumer(String receivedContent) {
-			System.out.println("INFO - A new consumer is created to handle a new packet");
+			logger.info("A new consumer is created to handle a new packet");
 			this.receivedContent = receivedContent;
 		}
 
@@ -81,16 +84,16 @@ public class ServerHandler extends ChannelInboundHandlerAdapter {
 			try {
 				if (!receivedContent.startsWith("@")) {
 					// Parse packet
-					System.out.println("INFO - A new packet is being parsed...");
+					logger.info("A new packet is being parsed...");
 					Record newRecord = Parser.toRecord(receivedContent);
-					System.out.println("INFO - A new packet has been parsed and split in several datapoints.");
+					logger.info("A new packet has been parsed and split in several datapoints.");
 					
 					List<String> channelData = newRecord.toGraphite();
 					for (String chanelSample : channelData) {
-						System.out.println("INFO - A new datapoint is being sent to Carbon...");
-						GraphiteClient.getClient().sendData(chanelSample);
+						logger.info("A new datapoint is being sent to Carbon: " + chanelSample);
+						GraphiteClient.getClient().sendData(chanelSample);					
 					}
-					System.out.println("INFO - All the datapoints have been sent to Carbon...");
+					logger.info("All the datapoints have been sent to Carbon...");
 
 				}
 			} catch (Exception e) {

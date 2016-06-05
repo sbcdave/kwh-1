@@ -1,5 +1,8 @@
 package org.kwh.tcp.server;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import io.netty.bootstrap.Bootstrap;
 import io.netty.channel.Channel;
 import io.netty.channel.ChannelFuture;
@@ -12,7 +15,7 @@ import io.netty.channel.socket.nio.NioSocketChannel;
 import io.netty.handler.codec.string.StringEncoder;
 import io.netty.handler.timeout.WriteTimeoutHandler;
 
-class GraphiteClient {
+public class GraphiteClient {
 
 	private static final EventLoopGroup group = new NioEventLoopGroup();
     private static final StringEncoder ENCODER = new StringEncoder();
@@ -22,6 +25,7 @@ class GraphiteClient {
     private static String graphiteHost = System.getProperty("org.kwh.graphite.server.host","localhost");
     private static Integer graphitePort = Integer.parseInt(System.getProperty("org.kwh.graphite.server.port","2003"));
     private static final GraphiteClient graphiteClient = new GraphiteClient();
+    static Logger logger = LoggerFactory.getLogger(GraphiteClient.class);
 
     private Channel connection;
 
@@ -59,11 +63,12 @@ class GraphiteClient {
 
     public void sendData(String data) {
     	if (this.started) {
-    		System.out.println("INFO - Sending Packet to Carbon");
+    		logger.info("Sending datapoint to Carbon...");
     		this.connection.writeAndFlush(data);
+    		logger.info("Datapoint has been sent to Carbon");
     	} else {
-    		System.out.println("WARNING - Connection to Graphite Server has failed or has not been started");
-    		System.out.println("WARNING - Shutting down gracefully");
+    		logger.warn("Connection to Graphite Server has failed or has not been started");
+    		logger.warn("Shutting down gracefully");
     		shutdown();
     	}
         
@@ -73,7 +78,7 @@ class GraphiteClient {
         if (connection != null) {
             connection.close().awaitUninterruptibly();
         }
-        System.out.println("--- GRAPHITE CLIENT - Stopped.");
+        logger.info("--- GRAPHITE CLIENT - Stopped.");
     }
 
 }

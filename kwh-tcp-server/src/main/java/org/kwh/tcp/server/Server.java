@@ -12,11 +12,15 @@ import io.netty.channel.socket.nio.NioServerSocketChannel;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 public class Server { 
 	
 	private final int port;
 	private boolean sendToCarbon = false;
 	private static ExecutorService es = Executors.newSingleThreadExecutor();
+	static Logger logger = LoggerFactory.getLogger(Server.class);
 
     public Server(int port) {
         this.port = port;
@@ -47,8 +51,7 @@ public class Server {
             	BindToGraphite cons = new BindToGraphite();
             	es.submit(cons);
             } else {
-            	System.out
-				.println("Warning: \"org.kwh.send.carbon\" is set false. "
+            	logger.warn("\"org.kwh.send.carbon\" is set false. "
 						+ "Data won't be sent to the databaseÏ");
             }
             
@@ -60,10 +63,10 @@ public class Server {
             
         } catch (Exception e) {
             e.printStackTrace();
-            System.out.println("Exception caught in Server");
+            logger.error("Exception caught in Server");
             
         } finally {
-        	System.out.println("shutdownGracefully Server");
+        	logger.info("shutdownGracefully Server");
             workerGroup.shutdownGracefully();
             bossGroup.shutdownGracefully();
         }

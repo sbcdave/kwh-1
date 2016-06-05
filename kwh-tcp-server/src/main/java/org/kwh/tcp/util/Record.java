@@ -92,7 +92,8 @@ public class Record {
     	if (PU06channelActive) activeChannels.add("PU06");
     }
     
-    static Logger Logger = LoggerFactory.getLogger("MyRecord");
+    static Logger analytics = LoggerFactory.getLogger("analytics");
+    static Logger stdout = LoggerFactory.getLogger(Record.class);
     
     private String stationID;
     private LocalDateTime timestamp;
@@ -166,16 +167,15 @@ public class Record {
                         channelCodeToName.getOrDefault(entry.getKey(), entry.getKey()),
                         entry.getValue(),
                         epochTime));
-                Logger.info(","+getStationID()+","+entry.getKey()+","+channelCodeToName.getOrDefault(entry.getKey(), entry.getKey())+","+entry.getValue()+","+getTimestamp());
+                analytics.info(","+getStationID()+","+entry.getKey()+","+channelCodeToName.getOrDefault(entry.getKey(), entry.getKey())+","+entry.getValue()+","+getTimestamp()+","+localZoneID);
+                stdout.info(getStationID()+","+entry.getKey()+","+channelCodeToName.getOrDefault(entry.getKey(), entry.getKey())+","+entry.getValue()+","+getTimestamp()+","+localZoneID);
             }
         }
-        System.out.println(data);
+        //stdout.info(data);
         return data;
     }
 
     private long getEpochTime() {
-    	System.out.println("Local EpochTime (" + localZoneID + "): " + this.getTimestamp().atZone(localZoneID).toEpochSecond());
-    	System.out.println("UTC EpochTime: " + this.getTimestamp().atZone(UTC).toEpochSecond());
         return this.getTimestamp().atZone(localZoneID).toEpochSecond();
     }
 }

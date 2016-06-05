@@ -11,6 +11,9 @@ import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 /**
  * Class to parse our remote telemetry data.  Currently only parses an extract file.  May have to handle
  * UDP datagrams if we have to write our own listener
@@ -26,6 +29,7 @@ public class Parser {
      * @param timeString a string of the form 'TM:08/10/2011,13:19:09'
      * @return a LocalDateTime instance
      */
+	static Logger logger = LoggerFactory.getLogger(Parser.class);
     public static LocalDateTime parseDate(String timeString) {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("'TM:'MM'/'dd'/'yyyy','HH':'mm':'ss");
         return LocalDateTime.parse(timeString, formatter);
@@ -54,7 +58,7 @@ public class Parser {
      * @return a Record
      */
     public static Record toRecord(String line) {
-    	System.out.println(line);
+    	logger.info(line);
         String[] columns = line.split(";");
         String[] headers = columns[0].split(":");
 
