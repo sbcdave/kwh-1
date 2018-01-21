@@ -31,6 +31,10 @@ public class Record {
     private static String AD04channelLabel =System.getProperty("org.kwh.AD04.channel.label","Channel_AD04");
     private static String AD05channelLabel =System.getProperty("org.kwh.AD05.channel.label","Channel_AD05");
     private static String AD06channelLabel =System.getProperty("org.kwh.AD06.channel.label","Channel_AD06");
+	private static String AD06channelLabel =System.getProperty("org.kwh.AD06.channel.label","Channel_AD07");
+	private static String AD06channelLabel =System.getProperty("org.kwh.AD06.channel.label","Channel_AD08");
+	private static String AD06channelLabel =System.getProperty("org.kwh.AD06.channel.label","Channel_AD09");
+	private static String AD06channelLabel =System.getProperty("org.kwh.AD06.channel.label","Channel_AD10");
     private static String AD11channelLabel =System.getProperty("org.kwh.AD11.channel.label","Channel_AD11");
     private static String AD12channelLabel =System.getProperty("org.kwh.AD12.channel.label","Channel_AD12");
     private static String PU01channelLabel =System.getProperty("org.kwh.PU01.channel.label","Channel_PU01");
@@ -39,12 +43,18 @@ public class Record {
     private static String PU04channelLabel =System.getProperty("org.kwh.PU04.channel.label","Channel_PU04");
     private static String PU05channelLabel =System.getProperty("org.kwh.PU05.channel.label","Channel_PU05");
     private static String PU06channelLabel =System.getProperty("org.kwh.PU06.channel.label","Channel_PU06");
+	private static String PU06channelLabel =System.getProperty("org.kwh.PU06.channel.label","Channel_PU07");
+	private static String PU06channelLabel =System.getProperty("org.kwh.PU06.channel.label","Channel_PU08");
     private static Boolean AD01channelActive =Boolean.parseBoolean(System.getProperty("org.kwh.AD01.channel.active","true"));
     private static Boolean AD02channelActive =Boolean.parseBoolean(System.getProperty("org.kwh.AD02.channel.active","true"));
     private static Boolean AD03channelActive =Boolean.parseBoolean(System.getProperty("org.kwh.AD03.channel.active","true"));
     private static Boolean AD04channelActive =Boolean.parseBoolean(System.getProperty("org.kwh.AD04.channel.active","true"));
     private static Boolean AD05channelActive =Boolean.parseBoolean(System.getProperty("org.kwh.AD05.channel.active","true"));
     private static Boolean AD06channelActive =Boolean.parseBoolean(System.getProperty("org.kwh.AD06.channel.active","true"));
+	private static Boolean AD06channelActive =Boolean.parseBoolean(System.getProperty("org.kwh.AD07.channel.active","true"));
+	private static Boolean AD06channelActive =Boolean.parseBoolean(System.getProperty("org.kwh.AD08.channel.active","true"));
+	private static Boolean AD06channelActive =Boolean.parseBoolean(System.getProperty("org.kwh.AD09.channel.active","true"));
+	private static Boolean AD06channelActive =Boolean.parseBoolean(System.getProperty("org.kwh.AD10.channel.active","true"));
     private static Boolean AD11channelActive =Boolean.parseBoolean(System.getProperty("org.kwh.AD11.channel.active","true"));
     private static Boolean AD12channelActive =Boolean.parseBoolean(System.getProperty("org.kwh.AD12.channel.active","true"));
     private static Boolean PU01channelActive =Boolean.parseBoolean(System.getProperty("org.kwh.PU01.channel.active","true"));
@@ -53,6 +63,8 @@ public class Record {
     private static Boolean PU04channelActive =Boolean.parseBoolean(System.getProperty("org.kwh.PU04.channel.active","true"));
     private static Boolean PU05channelActive =Boolean.parseBoolean(System.getProperty("org.kwh.PU05.channel.active","true"));
     private static Boolean PU06channelActive =Boolean.parseBoolean(System.getProperty("org.kwh.PU06.channel.active","true"));
+	private static Boolean PU06channelActive =Boolean.parseBoolean(System.getProperty("org.kwh.PU07.channel.active","true"));
+	private static Boolean PU06channelActive =Boolean.parseBoolean(System.getProperty("org.kwh.PU08.channel.active","true"));
 
     
     
@@ -63,6 +75,10 @@ public class Record {
         channelCodeToName.put("AD04", AD04channelLabel);
         channelCodeToName.put("AD05", AD05channelLabel);
         channelCodeToName.put("AD06", AD06channelLabel);
+		channelCodeToName.put("AD07", AD06channelLabel);
+		channelCodeToName.put("AD08", AD06channelLabel);
+		channelCodeToName.put("AD09", AD06channelLabel);
+		channelCodeToName.put("AD10", AD06channelLabel);
         channelCodeToName.put("AD11", AD11channelLabel);
         channelCodeToName.put("AD12", AD12channelLabel);
         channelCodeToName.put("PU01", PU01channelLabel);
@@ -71,6 +87,8 @@ public class Record {
         channelCodeToName.put("PU04", PU04channelLabel);
         channelCodeToName.put("PU05", PU05channelLabel);
         channelCodeToName.put("PU06", PU06channelLabel);
+		channelCodeToName.put("PU07", PU06channelLabel);
+		channelCodeToName.put("PU08", PU06channelLabel);
         channelCodeToName.put("TM", "TimeStamp");
         
     }
@@ -82,6 +100,10 @@ public class Record {
     	if (AD04channelActive) activeChannels.add("AD04");
     	if (AD05channelActive) activeChannels.add("AD05");
     	if (AD06channelActive) activeChannels.add("AD06");
+		if (AD06channelActive) activeChannels.add("AD07");
+		if (AD06channelActive) activeChannels.add("AD08");
+		if (AD06channelActive) activeChannels.add("AD09");
+		if (AD06channelActive) activeChannels.add("AD10");
     	if (AD11channelActive) activeChannels.add("AD11");
     	if (AD12channelActive) activeChannels.add("AD12");
     	if (PU01channelActive) activeChannels.add("PU01");
@@ -90,6 +112,8 @@ public class Record {
     	if (PU04channelActive) activeChannels.add("PU04");
     	if (PU05channelActive) activeChannels.add("PU05");
     	if (PU06channelActive) activeChannels.add("PU06");
+		if (PU06channelActive) activeChannels.add("PU07");
+		if (PU06channelActive) activeChannels.add("PU08");
     }
     
     static Logger analytics = LoggerFactory.getLogger("analytics");
