@@ -75,10 +75,10 @@ public class Record {
         channelCodeToName.put("AD04", AD04channelLabel);
         channelCodeToName.put("AD05", AD05channelLabel);
         channelCodeToName.put("AD06", AD06channelLabel);
-        channelCodeToName.put("AD07", AD06channelLabel);
-        channelCodeToName.put("AD08", AD06channelLabel);
-        channelCodeToName.put("AD09", AD06channelLabel);
-        channelCodeToName.put("AD10", AD06channelLabel);
+        channelCodeToName.put("AD07", AD07channelLabel);
+        channelCodeToName.put("AD08", AD08channelLabel);
+        channelCodeToName.put("AD09", AD09channelLabel);
+        channelCodeToName.put("AD10", AD10channelLabel);
         channelCodeToName.put("AD11", AD11channelLabel);
         channelCodeToName.put("AD12", AD12channelLabel);
         channelCodeToName.put("PU01", PU01channelLabel);
@@ -87,8 +87,8 @@ public class Record {
         channelCodeToName.put("PU04", PU04channelLabel);
         channelCodeToName.put("PU05", PU05channelLabel);
         channelCodeToName.put("PU06", PU06channelLabel);
-        channelCodeToName.put("PU07", PU06channelLabel);
-        channelCodeToName.put("PU08", PU06channelLabel);
+        channelCodeToName.put("PU07", PU07channelLabel);
+        channelCodeToName.put("PU08", PU08channelLabel);
         channelCodeToName.put("TM", "TimeStamp");
         
     }
